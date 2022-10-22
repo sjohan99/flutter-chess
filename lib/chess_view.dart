@@ -8,11 +8,37 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  double squareSize(BuildContext context) =>
-      MediaQuery.of(context).size.width / 8;
+  final Color whitePiecesColor = Colors.white;
+  final Color blackPiecesColor = Colors.black;
+  final Color selectColor = Colors.yellow;
 
-  Column generateColumn(
-      bool even, Color color1, Color color2, double size, int startNumber) {
+  int selected = 0;
+
+  double squareSize(BuildContext context) => MediaQuery.of(context).size.width / 8;
+
+  bool isSelected(int id) {
+    return selected == id;
+  }
+
+  Color getColor(cellId) {
+    int columnOffset = 0;
+    if ((cellId > 8 && cellId <= 16) || (cellId > 24 && cellId <= 32) || (cellId > 40 && cellId <= 48) || (cellId > 56)) {
+      columnOffset = 1;
+    }
+    Color color = getCorrectBaseColorFromPosition(cellId, columnOffset);
+
+    if (isSelected(cellId)) {
+      return Color.alphaBlend(Colors.yellow.withOpacity(0.4), color);
+    }
+    return color;
+  }
+
+  Color getCorrectBaseColorFromPosition(id, int columnOffset) {
+    Color color = (id + columnOffset) % 2 == 0 ? blackPiecesColor : whitePiecesColor;
+    return color;
+  }
+
+  Column generateColumn(bool even, Color color1, Color color2, double size, int startNumber) {
     if (even) {
       Color tmp = color1;
       color1 = color2;
@@ -38,17 +64,15 @@ class _BoardState extends State<Board> {
   GestureDetector generateContainer(Color color, double size, int id) {
     return GestureDetector(
       onTap: () {
-        debugPrint('clicked $id');
+        debugPrint('$id');
+        setState(() {
+          selected = selected == id ? 0 : id;
+        });
       },
       child: Container(
-        color: color,
+        color: getColor(id),
         width: size,
         height: size,
-        child: const Center(
-            child: Icon(
-          Icons.accessibility_outlined,
-          color: Colors.blueGrey,
-        )),
       ),
     );
   }
@@ -71,8 +95,7 @@ class _BoardState extends State<Board> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          generateBoard(Colors.white, Colors.black, squareSize(context)),
-          ElevatedButton(onPressed: () {}, child: const Text('Hello'))
+          generateBoard(whitePiecesColor, blackPiecesColor, squareSize(context)),
         ],
       ),
     );
