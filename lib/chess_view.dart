@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Board extends StatefulWidget {
-  const Board({super.key});
+class BoardWidget extends StatefulWidget {
+  const BoardWidget({super.key});
 
   @override
-  State<Board> createState() => _BoardState();
+  State<BoardWidget> createState() => _BoardWidgetState();
 }
 
-class _BoardState extends State<Board> {
+class _BoardWidgetState extends State<BoardWidget> {
   final Color whitePiecesColor = Colors.white;
   final Color blackPiecesColor = Colors.black;
   final Color selectColor = Colors.yellow;
