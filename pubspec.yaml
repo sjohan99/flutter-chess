@@ -1,0 +1,7 @@
+name: my_app
+
+dependencies:
+  test: ^1.21.6
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
