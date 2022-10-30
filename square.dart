@@ -1,4 +1,4 @@
-import 'config.dart';
+import 'config.dart' as cfg;
 
 import 'piece.dart';
 import 'position_exception.dart';
@@ -14,11 +14,11 @@ class Square {
   }
 
   Square.intFile(int file, this.rank, {this.occupiedBy = null, validator = const PositionValidator()}) : this.file = 'why does Dart enforce this??' {
-    if (fileConverter.containsKey(file)) {
-      this.file = fileConverter[file]!;
+    if (cfg.fileConverter.containsKey(file)) {
+      this.file = cfg.fileConverter[file]!;
       validator.validate(this.file, this.rank);
     } else {
-      throw PositionException('invalid file argument: $file\nExpected one of ${fileConverter.keys}');
+      throw PositionException('invalid file argument: $file\nExpected one of ${cfg.fileConverter.keys}');
     }
   }
 
@@ -27,18 +27,20 @@ class Square {
     if (other is Square && other.runtimeType == runtimeType) {
       return file == other.file && rank == other.rank;
     } else if (other is String) {
-      return toString() == other;
+      return this.chessRepresentation == other;
     }
     return false;
   }
 
   @override
   String toString() {
-    return '$file${rank.toString()}';
+    return this.chessRepresentation;
   }
 
   @override
   int get hashCode => toString().hashCode;
+
+  String get chessRepresentation => '$file${rank.toString()}';
 
   bool occupyWith(Piece piece) {
     if (occupiedBy == null) {
